@@ -2,19 +2,22 @@ import java.util.Scanner;
 
 import java.io.File;
 import java.io.FileNotFoundException;
+import java.io.PrintWriter;
 
 public class DomainSorter {
 
     public static void main(String[] args) {
         System.out.println("Welcome! This program sorts domain lists! Please begin by supplying a file containing domains.");
-        String[] domainList = readFile();
+        String[] domain_list = readFile();
 
-        for (String domain : domainList) {
+        for (String domain : domain_list) {
             System.out.println(domain);
         }
 
+        writeFile(domain_list);
 
-    }
+
+    } //main method end
 
 
     public static String[] readFile() {
@@ -64,8 +67,29 @@ public class DomainSorter {
         
         scanner.close();
         return domain_list;
-    }
-}
+
+    } //Read method end
+
+
+    public static void writeFile(String[] domain_list) {
+
+        try {
+            PrintWriter writer = new PrintWriter("domain_list_Sorted.txt");
+            for (String domain : domain_list) {
+                writer.println(domain);
+            }
+            writer.close();
+            System.out.println("Created file domain_list_sorted.txt");
+        }
+        
+        catch (FileNotFoundException e) {
+                System.out.println("Could not write file.");
+            }
+    } //Write method end
+    
+
+
+} //DomainSorter class end
 
 // Program logic, gets file input, grabs a string, seperates string by . array (lastindex - 1) will
 // be domain
