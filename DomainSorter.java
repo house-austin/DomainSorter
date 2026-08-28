@@ -1,6 +1,4 @@
 import java.util.Scanner;
-import java.util.Arrays;
-import java.util.Comparator;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.PrintWriter;
@@ -8,15 +6,11 @@ import java.io.PrintWriter;
 public class DomainSorter {
 
     public static void main(String[] args) {
-        System.out.println("Welcome! This program sorts domain lists! Please begin by supplying a file containing domains.");
+        System.out.println("Welcome! This program sorts domains based on the Second Level Domain! Please begin by supplying a file containing domains and subdomains.");
         Domain[] domain_list = readFile();
-
-        for (Domain domain : domain_list) {
-            System.out.println(domain.getDomain());
-        }
-
+        sortDomains(domain_list);
+        System.out.println("Domains sorted!");
         writeFile(domain_list);
-
 
     } //main method end
 
@@ -24,7 +18,7 @@ public class DomainSorter {
     public static Domain[] readFile() {
         
         Scanner scanner = new Scanner(System.in);
-        System.out.println("Please enter filename (Make sure to include file extension): ");
+        System.out.print("Please enter filename (Make sure to include file extension): ");
         Domain[] domain_list = null;
 
         int domain_count = 0;
@@ -58,7 +52,6 @@ public class DomainSorter {
                 System.out.println("File loaded!");
                 fileScanner.close();
 
-
             }
 
             catch (FileNotFoundException e) {
@@ -87,20 +80,56 @@ public class DomainSorter {
                 System.out.println("Could not write file.");
             }
     } //Write method end
+
+
+    public static void sortDomains(Domain[] domain_list) {
+
+        long startTime = System.nanoTime();
+       //Bubblesort alphabetically 
+        for (int i = 0; i < domain_list.length - 1; i++) {
+
+            for (int j = 0; j < domain_list.length - 1; j++) {
+
+                // Compare to logic: a compareTo b = -1 since b comes after a
+                //  b compareTo a = 1, a compareTo a = 0
+                // The if statement is comparing the domain in index j to the adjacent domain in j + 1
+                if (domain_list[j].getDomain().compareToIgnoreCase(domain_list[j + 1].getDomain()) > 0) {
+                  
+                    Domain temp = domain_list[j];
+                    domain_list[j] = domain_list[j + 1];
+                    domain_list[j + 1] = temp;
+                }
+            }
+        }
+
+        // Bubblesort by SLD
+        for (int i = 0; i < domain_list.length - 1; i++) {
+
+            for (int j = 0; j < domain_list.length - 1; j++) {
+
+                // Compare to logic: a compareTo b = -1 since b comes after a
+                // b compareTo a = 1, a compareTo a = 0
+                // The if statement is comparing the domain in index j to the adjacent domain in j + 1
+                if (domain_list[j].getSLD().compareToIgnoreCase(domain_list[j + 1].getSLD()) > 0) {
+                  
+                    Domain temp = domain_list[j];
+                    domain_list[j] = domain_list[j + 1];
+                    domain_list[j + 1] = temp;
+                }
+            }
+        }
+        long endTime = System.nanoTime();
+        double elapsedTime = ((endTime - startTime));
+        double elapsedTimeInSeconds = elapsedTime / 1_000_000_000.0;
+        System.out.println("Start time: " + startTime);
+        System.out.println("End time: " + endTime);
+        System.out.println("Elapsed time: " + elapsedTime);
+        System.out.println("Elapsed time (seconds): " + elapsedTimeInSeconds);
+    } //sortDomain method end
     
 
 
 } //DomainSorter class end
-
-// Program logic, gets file input, grabs a string, seperates string by . array (lastindex - 2) will
-// be domain
-
-// Requirments: 1 array - string array from str.split
-// 1 loop and 1 condtional statement - accomplised through menu and file looping
-// 2 methods - at least 1 returns value & and at least 1 performs operation on array
-// and uses array as paramet - maybe sorting file with array sorting
-// 1 custom class
-// basic input handling - read from a file
 
 
 class Domain {
@@ -126,4 +155,5 @@ class Domain {
         String sld = separated[length - 2];
         return sld;
     }
+
 }
